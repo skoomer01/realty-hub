@@ -10,14 +10,14 @@ build:
   stage: 
     build
   script:
-    - cd realtyhubremake\RealtyHub\RealtyHubBackend
+    - cd RealtyHub\RealtyHubBackend
     - ./gradlew assemble
 
 test:
   stage: 
     test
   script:
-    - cd realtyhubremake\RealtyHub\RealtyHubBackend
+    - cd RealtyHub\RealtyHubBackend
     - ./gradlew test
   
 sonarqube-check:
@@ -31,7 +31,7 @@ sonarqube-check:
     paths:
       - .sonar/cache
   script:
-    - cd realtyhubremake\RealtyHub\RealtyHubBackend
+    - cd RealtyHub\RealtyHubBackend
     - ./gradlew sonar
   allow_failure: true
   only:
