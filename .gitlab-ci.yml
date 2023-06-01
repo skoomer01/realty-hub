@@ -19,6 +19,12 @@ test:
   script:
     - cd RealtyHub\RealtyHubBackend
     - ./gradlew test
+
+jacocoTestReport:
+  stage: test
+  script:
+    - cd RealtyHub\RealtyHubBackend
+    - ./gradlew jacocoTestReport
   
 sonarqube-check:
   stage: sonarqube-check
