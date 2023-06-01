@@ -12,30 +12,30 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = &quot;user_info&quot;)
-<span class="nc bnc" id="L15" title="All 38 branches missed.">@Data</span>
-<span class="nc" id="L16">@Builder</span>
-<span class="nc" id="L17">@AllArgsConstructor</span>
-<span class="nc" id="L18">@NoArgsConstructor</span>
+<span class="pc bnc" id="L15" title="All 38 branches missed.">@Data</span>
+<span class="pc" id="L16">@Builder</span>
+<span class="fc" id="L17">@AllArgsConstructor</span>
+<span class="fc" id="L18">@NoArgsConstructor</span>
 public class UserInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = &quot;id&quot;)
-<span class="nc" id="L23">    private Long id;</span>
+<span class="fc" id="L23">    private Long id;</span>
 
     @NotBlank
     @Length(min = 2, max = 50)
     @Column(name = &quot;username&quot;)
-<span class="nc" id="L28">    private String username;</span>
+<span class="fc" id="L28">    private String username;</span>
 
     @NotBlank
     @Length(min = 2, max = 50)
     @Column(name = &quot;name&quot;)
-<span class="nc" id="L33">    private String name;</span>
+<span class="fc" id="L33">    private String name;</span>
 
     @NotBlank
     @Length(min = 2, max = 50)
     @Column(name = &quot;surname&quot;)
-<span class="nc" id="L38">    private String surname;</span>
+<span class="fc" id="L38">    private String surname;</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

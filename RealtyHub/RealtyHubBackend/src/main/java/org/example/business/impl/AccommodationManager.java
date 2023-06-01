@@ -32,6 +32,7 @@ public class AccommodationManager implements IAccommodationManager {
     private final UserRepository userRepository;
     private final AccessToken accessToken;
 
+    //test
     @Override
     @Transactional
     public CreateAccommodationResponse createAccommodation(CreateAccommodationRequest request) {
