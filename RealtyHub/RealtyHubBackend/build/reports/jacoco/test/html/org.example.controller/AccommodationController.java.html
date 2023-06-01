@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccommodationController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RealtyHubBackend</a> &gt; <a href="index.source.html" class="el_package">org.example.controller</a> &gt; <span class="el_source">AccommodationController.java</span></div><h1>AccommodationController.java</h1><pre class="source lang-java linenums">package org.example.controller;
+
+import lombok.AllArgsConstructor;
+import org.example.business.impl.AccommodationManager;
+import org.example.configuration.security.isauthenticated.IsAuthenticated;
+import org.example.domain.*;
+import org.example.domain.classes.Accommodation;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+import java.util.Optional;
+
+@RestController
+@RequestMapping(&quot;/accommodations&quot;)
+<span class="nc" id="L19">@AllArgsConstructor</span>
+@CrossOrigin(origins = &quot;http://localhost:3000/&quot;, allowedHeaders = &quot;*&quot;, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH})
+public class AccommodationController {
+    private final AccommodationManager accommodationManager;
+
+    @GetMapping
+    public ResponseEntity&lt;GetAllAccommodationsResponse&gt; getAllAccommodations() {
+<span class="nc" id="L26">        return ResponseEntity.ok(accommodationManager.getAllAccommodations());</span>
+    }
+
+    @GetMapping(&quot;/owned&quot;)
+    public ResponseEntity&lt;GetAllAccommodationsResponse&gt; getAllOwnedAccommodations() {
+<span class="nc" id="L31">        return ResponseEntity.ok(accommodationManager.getAllOwnedAccommodations());</span>
+    }
+    @GetMapping(&quot;/active&quot;)
+    public ResponseEntity&lt;GetAllAccommodationsResponse&gt; getAllActiveAccommodations() {
+<span class="nc" id="L35">        return ResponseEntity.ok(accommodationManager.getAllActiveAccommodations());</span>
+    }
+
+    @IsAuthenticated
+    @RolesAllowed({&quot;ROLE_REALTOR&quot;})
+    @PostMapping(&quot;/create&quot;)
+    public ResponseEntity&lt;CreateAccommodationResponse&gt; createAccommodation(@RequestBody @Valid CreateAccommodationRequest request) {
+<span class="nc" id="L42">        CreateAccommodationResponse response = accommodationManager.createAccommodation(request);</span>
+<span class="nc" id="L43">        return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
+    }
+
+    @IsAuthenticated
+    @RolesAllowed({&quot;ROLE_CUSTOMER&quot;})
+    @PostMapping(&quot;/purchase/{id}&quot;)
+    public void purchaseAccommodation(@PathVariable(value = &quot;id&quot;) final long id) {
+<span class="nc" id="L50">        accommodationManager.purchaseAccommodation(id);</span>
+<span class="nc" id="L51">    }</span>
+
+
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Accommodation&gt; getAccommodation(@PathVariable(value = &quot;id&quot;) final long id) {
+<span class="nc" id="L56">        final Optional&lt;Accommodation&gt; accommodationOptional = accommodationManager.getAccommodation(id);</span>
+<span class="nc" id="L57">        return accommodationOptional.map(accommodation -&gt; ResponseEntity.ok().body(accommodation)).orElseGet(() -&gt; ResponseEntity.notFound().build());</span>
+    }
+    @IsAuthenticated
+    @RolesAllowed({&quot;ROLE_ADMIN&quot;,&quot;ROLE_REALTOR&quot;})
+    @DeleteMapping(&quot;/{accommodationId}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteAccommodation(@PathVariable int accommodationId) {
+<span class="nc" id="L63">        accommodationManager.deleteAccommodation(accommodationId);</span>
+<span class="nc" id="L64">        return ResponseEntity.noContent().build();</span>
+    }
+    @IsAuthenticated
+    @RolesAllowed({&quot;ROLE_REALTOR&quot;})
+    @PutMapping(&quot;/update&quot;)
+    public ResponseEntity&lt;Void&gt; updateAccommodation(@RequestBody @Valid UpdateAccommodationRequest request) {
+<span class="nc" id="L70">        accommodationManager.updateAccommodation(request);</span>
+<span class="nc" id="L71">        return ResponseEntity.noContent().build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

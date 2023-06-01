@@ -1,0 +1,18 @@
+Main Research Question: How can authentication and authorization be implemented effectively in a Java SpringBoot application?
+
+Sub-Questions:
+
+    What are the best practices for implementing authentication and authorization in Java SpringBoot?
+    How can we ensure secure communication between the client and server during the authentication and authorization process?
+    What are the common security threats associated with authentication and authorization in Java SpringBoot and how can we mitigate them?
+    How can we implement role-based access control in Java SpringBoot to restrict access to certain resources based on user roles?
+    How can we integrate third-party authentication providers such as OAuth2 in Java SpringBoot?
+
+
+Main: compare tools, what are the best ones to pick in my project
+
+setting criteria
+
+sub:
+- swot analisys on alternatives
+- what is the best way to implemet it

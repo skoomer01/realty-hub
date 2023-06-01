@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RealtyHubBackend</a> &gt; <a href="index.source.html" class="el_package">org.example.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package org.example.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.example.business.impl.UserManager;
+import org.example.configuration.security.isauthenticated.IsAuthenticated;
+import org.example.domain.CreateUserRequest;
+import org.example.domain.CreateUserResponse;
+import org.example.domain.GetAllUsersResponse;
+import org.example.domain.UpdateUserRequest;
+import org.example.domain.classes.UserInfo;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+import java.util.Optional;
+
+@RestController
+@RequestMapping(&quot;/users&quot;)
+<span class="nc" id="L22">@RequiredArgsConstructor</span>
+@CrossOrigin(origins = &quot;http://localhost:3000/&quot;, allowedHeaders = &quot;*&quot;, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH})
+public class UserController {
+    private final UserManager userManager;
+
+    @CrossOrigin(origins = &quot;https://localhost:8080.com&quot;)
+    @GetMapping(path = &quot;/users&quot;)
+<span class="nc" id="L29">    public String homeInit(Model model){return &quot;home&quot;;}</span>
+
+    @IsAuthenticated
+    @RolesAllowed({&quot;ROLE_ADMIN&quot;,&quot;ROLE_CUSTOMER&quot;,&quot;ROLE_REALTOR&quot;})
+    @GetMapping(&quot;{id}&quot;)
+    public ResponseEntity&lt;UserInfo&gt; getUser(@PathVariable(value = &quot;id&quot;) final long id) {
+<span class="nc" id="L35">        final Optional&lt;UserInfo&gt; userInfoOptional = userManager.getUser(id);</span>
+<span class="nc" id="L36">        return userInfoOptional.map(userInfo -&gt; ResponseEntity.ok().body(userInfo)).orElseGet(() -&gt; ResponseEntity.notFound().build());</span>
+    }
+
+    @IsAuthenticated
+    @RolesAllowed({&quot;ROLE_ADMIN&quot;})
+    @GetMapping
+    public ResponseEntity&lt;GetAllUsersResponse&gt; getAllUsers( ) {
+<span class="nc" id="L43">        return ResponseEntity.ok(userManager.getAllUsers());</span>
+    }
+
+    @IsAuthenticated
+    @RolesAllowed({&quot;ROLE_ADMIN&quot;})
+    @DeleteMapping(&quot;{userId}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteUser(@PathVariable int userId) {
+<span class="nc" id="L50">        userManager.deleteUser(userId);</span>
+<span class="nc" id="L51">        return ResponseEntity.noContent().build();</span>
+    }
+
+    @PostMapping(&quot;/customer&quot;)
+    public ResponseEntity&lt;CreateUserResponse&gt; createCustomer(@RequestBody @Valid CreateUserRequest request) {
+<span class="nc" id="L56">        CreateUserResponse response = userManager.createCustomer(request);</span>
+<span class="nc" id="L57">        return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
+    }
+
+    @PostMapping(&quot;/realtor&quot;)
+    public ResponseEntity&lt;CreateUserResponse&gt; createRealtor(@RequestBody @Valid CreateUserRequest request) {
+<span class="nc" id="L62">        CreateUserResponse response = userManager.createRealtor(request);</span>
+<span class="nc" id="L63">        return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
+    }
+
+    @RolesAllowed({&quot;ROLE_REALTOR&quot;, &quot;ROLE_CUSTOMER&quot;})
+    @PutMapping(&quot;{id}&quot;)
+    public ResponseEntity&lt;UserInfo&gt; updateUser(@PathVariable(&quot;id&quot;) long id, @RequestBody @Valid UpdateUserRequest request) {
+<span class="nc" id="L69">        request.setId(id);</span>
+<span class="nc" id="L70">        userManager.updateUser(request);</span>
+<span class="nc" id="L71">        return ResponseEntity.noContent().build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

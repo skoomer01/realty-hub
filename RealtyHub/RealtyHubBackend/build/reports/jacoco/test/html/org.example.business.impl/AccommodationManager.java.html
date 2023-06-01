@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccommodationManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RealtyHubBackend</a> &gt; <a href="index.source.html" class="el_package">org.example.business.impl</a> &gt; <span class="el_source">AccommodationManager.java</span></div><h1>AccommodationManager.java</h1><pre class="source lang-java linenums">package org.example.business.impl;
+
+
+import lombok.AllArgsConstructor;
+import org.example.business.IAccommodationIdValidator;
+import org.example.business.IAccommodationManager;
+import org.example.business.exception.InvalidAccommodationException;
+import org.example.business.impl.converters.AccommodationConverter;
+import org.example.business.impl.converters.AddressConverter;
+import org.example.domain.*;
+import org.example.domain.classes.AccessToken;
+import org.example.domain.classes.Accommodation;
+import org.example.domain.classes.Address;
+import org.example.persistance.AccommodationRepository;
+import org.example.persistance.AddressRepository;
+import org.example.persistance.UserAccommodationRepository;
+import org.example.persistance.UserRepository;
+import org.example.persistance.entity.AccommodationEntity;
+import org.example.persistance.entity.AddressEntity;
+import org.example.persistance.entity.UserAccommodationEntity;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+<span class="fc" id="L28">@AllArgsConstructor</span>
+public class AccommodationManager implements IAccommodationManager {
+    private final AccommodationRepository accommodationRepository;
+    private final AddressRepository addressRepository;
+    private final IAccommodationIdValidator accommodationIdValidator;
+    private final UserAccommodationRepository userAccommodationRepository;
+    private final UserRepository userRepository;
+    private final AccessToken accessToken;
+
+    @Override
+    @Transactional
+    public CreateAccommodationResponse createAccommodation(CreateAccommodationRequest request) {
+
+<span class="fc" id="L41">        Optional&lt;AccommodationEntity&gt; savedAccommodation = saveNewAccommodation(request);</span>
+<span class="fc" id="L42">            UserAccommodationEntity userAccommodationEntity = UserAccommodationEntity.builder().user(userRepository.getById(accessToken.getUserId())).accommodation(savedAccommodation.orElse(null)).status(&quot;Active&quot;).build();</span>
+<span class="fc" id="L43">            userAccommodationRepository.save(userAccommodationEntity);</span>
+
+<span class="fc" id="L45">        return savedAccommodation.map(accommodationEntity -&gt; CreateAccommodationResponse.builder()</span>
+<span class="fc" id="L46">                .accommodationId(accommodationEntity.getId())</span>
+<span class="fc" id="L47">                .build()).orElse(null);</span>
+    }
+    private Optional&lt;AccommodationEntity&gt; saveNewAccommodation(CreateAccommodationRequest request) {
+<span class="fc" id="L50">        AddressEntity addressEntity = AddressEntity.builder()</span>
+<span class="fc" id="L51">                .streetName(request.getStreetName())</span>
+<span class="fc" id="L52">                .number(request.getHouseNumber())</span>
+<span class="fc" id="L53">                .postcode(request.getPostcode()).build();</span>
+<span class="fc" id="L54">        addressRepository.save(addressEntity);</span>
+<span class="fc" id="L55">        AccommodationEntity newAccommodation = AccommodationEntity.builder()</span>
+<span class="fc" id="L56">                    .name(request.getName())</span>
+<span class="fc" id="L57">                    .address(addressEntity)</span>
+<span class="fc" id="L58">                    .price(request.getPrice())</span>
+<span class="fc" id="L59">                    .interior(request.getInterior())</span>
+<span class="fc" id="L60">                    .area(request.getArea())</span>
+<span class="fc" id="L61">                    .startingDate(request.getStartingDate())</span>
+<span class="fc" id="L62">                    .image(request.getImage())</span>
+<span class="fc" id="L63">                    .rooms(request.getRooms())</span>
+<span class="fc" id="L64">                    .floors(request.getFloors())</span>
+<span class="fc" id="L65">                    .build();</span>
+<span class="fc" id="L66">        return Optional.ofNullable(accommodationRepository.save(newAccommodation));</span>
+    }
+
+    @Override
+    public Optional&lt;Accommodation&gt; getAccommodation(long accommodationId)
+    {
+<span class="fc" id="L72">        return accommodationRepository.findById(accommodationId).map(AccommodationConverter::convert);</span>
+    }
+    @Transactional
+    @Override
+    public void deleteAccommodation(long accommodationId)
+    {
+<span class="fc" id="L78">        this.userAccommodationRepository.deleteByUserAndAccommodation(accessToken.getUserId(),accommodationId);</span>
+<span class="fc" id="L79">        this.accommodationRepository.deleteById(accommodationId);</span>
+
+<span class="fc" id="L81">    }</span>
+    @Override
+    public void updateAccommodation(UpdateAccommodationRequest request)
+    {
+<span class="fc" id="L85">        Optional&lt;AccommodationEntity&gt; accommodationEntity = accommodationRepository.findById(request.getId());</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if(accommodationEntity.isEmpty())</span>
+        {
+<span class="fc" id="L88">            throw new InvalidAccommodationException(&quot;ACCOMMODATION_ID_INVALID&quot;);</span>
+        }
+<span class="fc" id="L90">        accommodationIdValidator.validateId(request.getId());</span>
+<span class="fc" id="L91">        AccommodationEntity accommodation = accommodationEntity.get();</span>
+<span class="fc" id="L92">        updateFields(request, accommodation);</span>
+<span class="fc" id="L93">    }</span>
+
+    private void updateFields(UpdateAccommodationRequest request, AccommodationEntity accommodation) {
+<span class="fc" id="L96">        Optional&lt;AccommodationEntity&gt; accommodationEntity = accommodationRepository.findById(request.getId());</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if(accommodationEntity.isPresent()) {</span>
+<span class="fc" id="L98">            AddressEntity addressEntity = accommodationEntity.get().getAddress();</span>
+<span class="fc" id="L99">            addressEntity.setPostcode(request.getPostcode());</span>
+<span class="fc" id="L100">            addressEntity.setStreetName(request.getStreetName());</span>
+<span class="fc" id="L101">            addressEntity.setNumber(request.getHouseNumber());</span>
+            //addressRepository.getAddressByParameters(request.getStreetName(), request.getPostcode(), request.getHouseNumber());
+<span class="fc" id="L103">            accommodation.setName(request.getName());</span>
+<span class="fc" id="L104">            accommodation.setInterior(request.getInterior());</span>
+<span class="fc" id="L105">            accommodation.setArea(request.getArea());</span>
+<span class="fc" id="L106">            accommodation.setPrice(request.getPrice());</span>
+<span class="fc" id="L107">            accommodation.setStartingDate(request.getStartingDate());</span>
+<span class="fc" id="L108">            accommodation.setFloors(request.getFloors());</span>
+<span class="fc" id="L109">            accommodation.setRooms(request.getRooms());</span>
+<span class="fc" id="L110">            accommodation.setImage(request.getImage());</span>
+<span class="fc" id="L111">            accommodation.setAddress(addressEntity);</span>
+<span class="fc" id="L112">            addressRepository.save(addressEntity);</span>
+<span class="fc" id="L113">            accommodationRepository.save(accommodation);</span>
+        }
+<span class="fc" id="L115">    }</span>
+
+    @Override
+    public GetAllAccommodationsResponse getAllAccommodations() {
+<span class="fc" id="L119">        List&lt;Accommodation&gt; accommodations = accommodationRepository.findAll()</span>
+<span class="fc" id="L120">                .stream()</span>
+<span class="fc" id="L121">                .map(AccommodationConverter::convert)</span>
+<span class="fc" id="L122">                .toList();</span>
+
+<span class="fc" id="L124">        return GetAllAccommodationsResponse.builder()</span>
+<span class="fc" id="L125">                .accommodations(accommodations)</span>
+<span class="fc" id="L126">                .build();</span>
+    }
+
+    @Override
+    public GetAllAccommodationsResponse getAllOwnedAccommodations() {
+<span class="fc" id="L131">        List&lt;Accommodation&gt; accommodations = accommodationRepository.getAllOwnedAccommodations(accessToken.getUserId())</span>
+<span class="fc" id="L132">                .stream()</span>
+<span class="fc" id="L133">                .map(AccommodationConverter::convert)</span>
+<span class="fc" id="L134">                .toList();</span>
+
+<span class="fc" id="L136">        return GetAllAccommodationsResponse.builder()</span>
+<span class="fc" id="L137">                .accommodations(accommodations)</span>
+<span class="fc" id="L138">                .build();</span>
+    }
+    @Override
+    public GetAllAccommodationsResponse getAllActiveAccommodations() {
+<span class="fc" id="L142">        List&lt;Accommodation&gt; accommodations = accommodationRepository.getAllAvailableAccommodations()</span>
+<span class="fc" id="L143">                .stream()</span>
+<span class="fc" id="L144">                .map(AccommodationConverter::convert)</span>
+<span class="fc" id="L145">                .toList();</span>
+
+<span class="fc" id="L147">        return GetAllAccommodationsResponse.builder()</span>
+<span class="fc" id="L148">                .accommodations(accommodations)</span>
+<span class="fc" id="L149">                .build();</span>
+    }
+
+
+    @Override
+    @Transactional
+    public void purchaseAccommodation(Long id)
+    {
+<span class="fc" id="L157">        AccommodationEntity accommodationEntity = accommodationRepository.getById(id);</span>
+<span class="fc" id="L158">        UserAccommodationEntity userAccommodationEntity = UserAccommodationEntity.builder().user(userRepository.getById(accessToken.getUserId())).accommodation(accommodationEntity).status(&quot;Purchased&quot;).build();</span>
+<span class="fc" id="L159">        userAccommodationRepository.save(userAccommodationEntity);</span>
+<span class="fc" id="L160">        userAccommodationRepository.updateStatus(id);</span>
+<span class="fc" id="L161">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
