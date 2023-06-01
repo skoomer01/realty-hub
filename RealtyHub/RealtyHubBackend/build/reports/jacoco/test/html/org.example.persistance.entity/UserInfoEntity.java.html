@@ -12,25 +12,25 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = &quot;user_info&quot;)
-<span class="pc bnc" id="L15" title="All 38 branches missed.">@Data</span>
-<span class="pc" id="L16">@Builder</span>
-<span class="fc" id="L17">@AllArgsConstructor</span>
-<span class="fc" id="L18">@NoArgsConstructor</span>
+<span class="nc bnc" id="L15" title="All 38 branches missed.">@Data</span>
+<span class="nc" id="L16">@Builder</span>
+<span class="nc" id="L17">@AllArgsConstructor</span>
+<span class="nc" id="L18">@NoArgsConstructor</span>
 public class UserInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = &quot;id&quot;)
-<span class="fc" id="L23">    private Long id;</span>
+<span class="nc" id="L23">    private Long id;</span>
 
     @NotBlank
     @Length(min = 2, max = 50)
     @Column(name = &quot;username&quot;)
-<span class="fc" id="L28">    private String username;</span>
+<span class="nc" id="L28">    private String username;</span>
 
     @NotBlank
     @Length(min = 2, max = 50)
     @Column(name = &quot;name&quot;)
-<span class="fc" id="L33">    private String name;</span>
+<span class="nc" id="L33">    private String name;</span>
 
     @NotBlank
     @Length(min = 2, max = 50)

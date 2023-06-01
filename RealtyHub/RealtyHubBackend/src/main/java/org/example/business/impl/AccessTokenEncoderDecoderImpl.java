@@ -1,9 +1,6 @@
 package org.example.business.impl;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.example.business.AccessTokenDecoder;
@@ -26,7 +23,7 @@ import java.util.Map;
 public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, AccessTokenDecoder {
     private final Key key;
 
-    public AccessTokenEncoderDecoderImpl(@Value("${jwt.secret}") String secretKey) {
+        public AccessTokenEncoderDecoderImpl(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -54,8 +51,11 @@ public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, Access
     @Override
     public AccessToken decode(String accessTokenEncoded) {
         try {
-            Jwt jwt = Jwts.parserBuilder().setSigningKey(key).build().parse(accessTokenEncoded);
-            Claims claims = (Claims) jwt.getBody();
+            JwtParser jwt = Jwts.parserBuilder().setSigningKey(key).build();//.parse(accessTokenEncoded);
+            Jws<Claims> jws = jwt.parseClaimsJws(accessTokenEncoded);
+            Claims claims = jws.getBody();
+
+            //Claims claims = (Claims) jwt.getBody();
 
             List<String> roles = claims.get("roles", List.class);
 

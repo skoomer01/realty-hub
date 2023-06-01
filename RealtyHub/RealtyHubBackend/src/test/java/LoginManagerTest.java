@@ -1,6 +1,5 @@
 
 import org.example.business.AccessTokenEncoder;
-import org.example.business.ILoginManager;
 import org.example.business.exception.InvalidCredentialsException;
 import org.example.business.impl.LoginManager;
 import org.example.domain.*;
@@ -16,10 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.management.relation.Role;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 

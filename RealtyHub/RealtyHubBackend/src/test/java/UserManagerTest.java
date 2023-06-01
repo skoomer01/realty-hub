@@ -1,9 +1,7 @@
-import org.apache.catalina.User;
+import org.example.business.exception.UnauthorizedDataAccessException;
 import org.example.business.impl.UserManager;
 import org.example.domain.*;
 import org.example.domain.classes.AccessToken;
-import org.example.domain.classes.Accommodation;
-import org.example.domain.classes.Address;
 import org.example.domain.classes.UserInfo;
 import org.example.persistance.UserInfoRepository;
 import org.example.persistance.UserRepository;
@@ -15,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -59,7 +56,6 @@ public class UserManagerTest {
         //assert
         assertEquals(1L, (long) response.getUserId());
         verify(repository,times(1)).save(any(UserEntity.class));
-        //test
     }
 
     @Test
@@ -81,7 +77,6 @@ public class UserManagerTest {
         //assert
         assertEquals(1L, (long) response.getUserId());
         verify(repository,times(1)).save(any(UserEntity.class));
-        //test
     }
     @Test
     void testDeleteUser() {
@@ -113,14 +108,13 @@ public class UserManagerTest {
     void shouldReturnAllUsers(){
         // Arrange
         final UserInfoEntity userInfoEntity = UserInfoEntity.builder().id(1L).username("test").surname("surname").name("name").build();
-        final UserRoleEntity userRoleEntity = UserRoleEntity.builder().id(1L).role(RoleEnum.CUSTOMER).user(mock(UserEntity.class)).build();
-        final UserEntity userEntity = UserEntity.builder().username("test").password("encoded").userRoles(Set.of(userRoleEntity)).userinfo(userInfoEntity).build();
 
         final UserInfoEntity userInfoEntity2 = UserInfoEntity.builder().id(2L).username("test2").surname("surname2").name("name2").build();
-        final UserRoleEntity userRoleEntity2 = UserRoleEntity.builder().id(2L).role(RoleEnum.CUSTOMER).user(mock(UserEntity.class)).build();
-        final UserEntity userEntity2 = UserEntity.builder().username("test2").password("encoded").userRoles(Set.of(userRoleEntity2)).userinfo(userInfoEntity2).build();
+
 
         //Act
+        when(userInfoRepository.findAll())
+                .thenReturn(List.of(userInfoEntity, userInfoEntity2));
 
         GetAllUsersResponse actualResult = userManager.getAllUsers();
 
@@ -131,23 +125,49 @@ public class UserManagerTest {
         GetAllUsersResponse expectedResult = GetAllUsersResponse.builder().users(List.of(user, user2)).build();
 
         //Assert
-        assertEquals(1, 1);
+        assertEquals(2, actualResult.getUsers().size());
+        assertEquals(expectedResult.getUsers().get(0).getName(),actualResult.getUsers().get(0).getName());
+        assertEquals(expectedResult.getUsers().get(1).getName(),actualResult.getUsers().get(1).getName());
         verify(userInfoRepository, times(1)).findAll();
     }
-
     @Test
-    void testGetUserById() {
-//        final UserInfoEntity userInfoEntity = UserInfoEntity.builder().id(1L).username("test").surname("surname").name("name").build();
-//        final UserRoleEntity userRoleEntity = UserRoleEntity.builder().id(1L).role(RoleEnum.CUSTOMER).user(mock(UserEntity.class)).build();
-//        final UserEntity userEntity = UserEntity.builder().username("test").password("encoded").userRoles(Set.of(userRoleEntity)).userinfo(userInfoEntity).build();
-//
-//        when(userInfoRepository.findById(1L)).thenReturn(Optional.of(userInfoEntity));
-//        when(repository.findById(1L)).thenReturn(Optional.of(userEntity));
-//        requestAccessToken.setUserId(1L);
-//        Optional<UserInfo> userInfo = userManager.getUser(1L);
-//
-//        verify(userInfoRepository, times(1)).findById(userEntity.getId());
+    public void testGetUser_WithNonAdminRoleAndMatchingUserID() {
+        when(requestAccessToken.hasRole(RoleEnum.ADMIN.name())).thenReturn(false);
+        long loggedInUserID = 456;
+        when(requestAccessToken.getUserId()).thenReturn(loggedInUserID);
+
+        long userID = 456;
+        Optional<UserInfo> result = userManager.getUser(userID);
+
+        //Assert
+        verify(userInfoRepository, times(1)).findById(userID);
     }
+    @Test
+    public void testGetUser_WithAdminRole() {
+
+        when(requestAccessToken.hasRole(RoleEnum.ADMIN.name())).thenReturn(true);
+
+        long userID = 123;
+        Optional<UserInfo> result = userManager.getUser(userID);
+
+        //Assert
+        verify(userInfoRepository, times(1)).findById(userID);
+    }
+    @Test
+    public void testGetUser_WithNonAdminRoleAndDifferentUserID() {
+        when(requestAccessToken.hasRole(RoleEnum.ADMIN.name())).thenReturn(false);
+        long loggedInUserID = 456;
+        when(requestAccessToken.getUserId()).thenReturn(loggedInUserID);
+
+        long userID = 789;
+        UnauthorizedDataAccessException exception = assertThrows(UnauthorizedDataAccessException.class, () -> userManager.getUser(userID));
+
+        //Assert
+        verify(userInfoRepository, never()).findById(anyLong());
+
+        assertEquals("403 FORBIDDEN \"USER_ID_NOT_FROM_LOGGED_IN_USER\"", exception.getMessage());
+    }
+
 
     @Test
     void testUpdateUserValid() {
@@ -155,10 +175,6 @@ public class UserManagerTest {
         final UpdateUserRequest request = UpdateUserRequest.builder().id(1L).name("new name").username("new username").surname("new surname").build();
 
         final UserInfoEntity userInfoEntity = UserInfoEntity.builder().id(1L).username("test").surname("surname").name("name").build();
-        final UserRoleEntity userRoleEntity = UserRoleEntity.builder().id(1L).role(RoleEnum.CUSTOMER).user(mock(UserEntity.class)).build();
-        final UserEntity userEntity = UserEntity.builder().id(1L).username("test").password("encoded").userRoles(Set.of(userRoleEntity)).userinfo(userInfoEntity).build();
-
-
 
         //Act
         when(userInfoRepository.findById(1L)).thenReturn(Optional.ofNullable(userInfoEntity));

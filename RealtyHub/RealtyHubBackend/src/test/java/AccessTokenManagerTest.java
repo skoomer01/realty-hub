@@ -1,29 +1,20 @@
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.JwtException;
 import org.example.business.AccessTokenDecoder;
 import org.example.business.AccessTokenEncoder;
-import org.example.business.exception.InvalidAccessTokenException;
 import org.example.business.impl.AccessTokenEncoderDecoderImpl;
 import org.example.domain.classes.AccessToken;
 import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.springframework.util.StringUtils;
 
-import java.security.Key;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 public class AccessTokenManagerTest {
     @Rule

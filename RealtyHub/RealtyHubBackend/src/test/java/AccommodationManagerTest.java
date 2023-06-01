@@ -54,8 +54,6 @@ public class AccommodationManagerTest {
 
         when(accommodationRepository.save(any(AccommodationEntity.class))).thenReturn(savedAccommodation);
 
-        final AccommodationEntity accommodationEntityReturn = AccommodationEntity.builder().id(1L).name("Apartment").startingDate("10-08-2000").price(625.00).image("image").area(23).floors(1).interior("furnished").rooms(1).address(addressEntity).build();
-
 
 
         //act
@@ -251,13 +249,6 @@ public class AccommodationManagerTest {
 
         GetAllAccommodationsResponse actualResult = accommodationManager.getAllActiveAccommodations();
 
-        final Address expectedAddress = Address.builder().id(1L).number(10).postcode("ABCD12").streetName("Hemelrijken").build();
-        final Accommodation expectedAccommodation = Accommodation.builder().id(1L).name("Apartment").startingDate("10-08-2000").price(625.00).image("image").area(23).floors(1).interior("furnished").rooms(1).address(expectedAddress).build();
-
-        final Address expectedAddress2 = Address.builder().id(1L).number(10).postcode("ABCD12").streetName("Hemelrijken2").build();
-        final Accommodation expectedAccommodation2 = Accommodation.builder().id(1L).name("Apartment2").startingDate("10-08-2000").price(725.00).image("image2").area(24).floors(1).interior("furnished").rooms(1).address(expectedAddress2).build();
-
-        GetAllAccommodationsResponse expectedResult = GetAllAccommodationsResponse.builder().accommodations(List.of(expectedAccommodation, expectedAccommodation2)).build();
 
         //Assert
         verify(accommodationRepository, times(1)).getAllAvailableAccommodations();
@@ -287,7 +278,6 @@ public class AccommodationManagerTest {
         final Address expectedAddress2 = Address.builder().id(1L).number(10).postcode("ABCD12").streetName("Hemelrijken2").build();
         final Accommodation expectedAccommodation2 = Accommodation.builder().id(1L).name("Apartment2").startingDate("10-08-2000").price(725.00).image("image2").area(24).floors(1).interior("furnished").rooms(1).address(expectedAddress2).build();
 
-        GetAllAccommodationsResponse expectedResult = GetAllAccommodationsResponse.builder().accommodations(List.of(expectedAccommodation, expectedAccommodation2)).build();
 
         //Assert
         verify(accommodationRepository, times(1)).getAllOwnedAccommodations(accessToken.getUserId());

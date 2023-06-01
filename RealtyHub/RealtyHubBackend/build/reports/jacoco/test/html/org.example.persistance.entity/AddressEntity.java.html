@@ -10,23 +10,23 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = &quot;address&quot;)
-<span class="pc bpc" id="L13" title="22 of 32 branches missed.">@Data</span>
-<span class="fc" id="L14">@AllArgsConstructor</span>
-<span class="fc" id="L15">@NoArgsConstructor</span>
-<span class="pc" id="L16">@Builder</span>
+<span class="nc bnc" id="L13" title="All 32 branches missed.">@Data</span>
+<span class="nc" id="L14">@AllArgsConstructor</span>
+<span class="nc" id="L15">@NoArgsConstructor</span>
+<span class="nc" id="L16">@Builder</span>
 public class AddressEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = &quot;id&quot;)
-<span class="fc" id="L21">    private Long id;</span>
+<span class="nc" id="L21">    private Long id;</span>
 
     @Column(name = &quot;number&quot;)
-<span class="fc" id="L24">    private int number;</span>
+<span class="nc" id="L24">    private int number;</span>
 
     @Column(name = &quot;street_name&quot;)
-<span class="fc" id="L27">    private String streetName;</span>
+<span class="nc" id="L27">    private String streetName;</span>
 
     @Column(name = &quot;postcode&quot;)
-<span class="fc" id="L30">    private String postcode;</span>
+<span class="nc" id="L30">    private String postcode;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
