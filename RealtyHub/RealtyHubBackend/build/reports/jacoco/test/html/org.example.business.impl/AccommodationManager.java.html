@@ -74,7 +74,7 @@ public class AccommodationManager implements IAccommodationManager {
     @Override
     public void deleteAccommodation(long accommodationId)
     {
-<span class="fc" id="L77">        this.userAccommodationRepository.deleteByUserAndAccommodation(accessToken.getUserId(),accommodationId);</span>
+<span class="fc" id="L77">        this.userAccommodationRepository.deleteByUserAndAccommodation(accommodationId);</span>
 <span class="fc" id="L78">        this.accommodationRepository.deleteById(accommodationId);</span>
 
 <span class="fc" id="L80">    }</span>

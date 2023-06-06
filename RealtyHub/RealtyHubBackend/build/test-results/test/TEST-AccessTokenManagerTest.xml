@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="AccessTokenManagerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-06-01T12:09:33" hostname="DESKTOP-E8T7ITR" time="1.063">
+<testsuite name="AccessTokenManagerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-06-02T15:45:25" hostname="DESKTOP-E8T7ITR" time="1.002">
   <properties/>
-  <testcase name="testEncode()" classname="AccessTokenManagerTest" time="1.063"/>
+  <testcase name="testEncode()" classname="AccessTokenManagerTest" time="1.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

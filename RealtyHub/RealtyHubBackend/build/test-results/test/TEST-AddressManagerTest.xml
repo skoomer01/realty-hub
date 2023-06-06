@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="AddressManagerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-06-01T12:09:35" hostname="DESKTOP-E8T7ITR" time="0.008">
+<testsuite name="AddressManagerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-06-02T15:45:26" hostname="DESKTOP-E8T7ITR" time="0.009">
   <properties/>
-  <testcase name="shouldSaveAddressWithAllFields()" classname="AddressManagerTest" time="0.004"/>
+  <testcase name="shouldSaveAddressWithAllFields()" classname="AddressManagerTest" time="0.005"/>
   <testcase name="duplicatedAddressShouldThrowException()" classname="AddressManagerTest" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
