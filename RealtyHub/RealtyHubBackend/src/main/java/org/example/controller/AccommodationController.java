@@ -70,4 +70,14 @@ public class AccommodationController {
         accommodationManager.updateAccommodation(request);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/activeCount")
+    public int getActiveAccommodationsCount() {
+        return accommodationManager.countActiveAccommodations();
+    }
+
+    @GetMapping("/count")
+    public int getAccommodationsCount() {
+        return accommodationManager.countAccommodations();
+    }
 }

@@ -158,5 +158,11 @@ public class AccommodationManager implements IAccommodationManager {
         userAccommodationRepository.updateStatus(id);
     }
 
+    public int countAccommodations() {
+        return accommodationRepository.getAllAccommodationsCount();
+    }
+    public int countActiveAccommodations() {
+        return accommodationRepository.getAllActiveAccommodationsCount();
+    }
 
 }

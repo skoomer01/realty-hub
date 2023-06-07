@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="UserManagerTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2023-06-02T15:45:27" hostname="DESKTOP-E8T7ITR" time="0.15">
+<testsuite name="UserManagerTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2023-06-07T08:59:44" hostname="DESKTOP-E8T7ITR" time="0.165">
   <properties/>
-  <testcase name="testGetUser_WithNonAdminRoleAndDifferentUserID()" classname="UserManagerTest" time="0.099"/>
-  <testcase name="shouldSaveRealtorWithAllFields()" classname="UserManagerTest" time="0.011"/>
-  <testcase name="shouldReturnAllUsers()" classname="UserManagerTest" time="0.011"/>
+  <testcase name="testGetUser_WithNonAdminRoleAndDifferentUserID()" classname="UserManagerTest" time="0.097"/>
+  <testcase name="shouldSaveRealtorWithAllFields()" classname="UserManagerTest" time="0.016"/>
+  <testcase name="shouldReturnAllUsers()" classname="UserManagerTest" time="0.015"/>
   <testcase name="shouldSaveCustomerWithAllFields()" classname="UserManagerTest" time="0.005"/>
-  <testcase name="testGetUser_WithNonAdminRoleAndMatchingUserID()" classname="UserManagerTest" time="0.004"/>
+  <testcase name="testGetUser_WithNonAdminRoleAndMatchingUserID()" classname="UserManagerTest" time="0.005"/>
   <testcase name="testDeleteUser()" classname="UserManagerTest" time="0.003"/>
-  <testcase name="testUpdateUserValid()" classname="UserManagerTest" time="0.007"/>
-  <testcase name="testGetUser_WithAdminRole()" classname="UserManagerTest" time="0.003"/>
+  <testcase name="testUpdateUserValid()" classname="UserManagerTest" time="0.009"/>
+  <testcase name="testGetUser_WithAdminRole()" classname="UserManagerTest" time="0.005"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

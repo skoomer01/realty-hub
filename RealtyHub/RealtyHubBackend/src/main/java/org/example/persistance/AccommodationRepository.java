@@ -22,4 +22,14 @@ public interface AccommodationRepository  extends JpaRepository<AccommodationEnt
             "WHERE ua.status = 'Active'",
             nativeQuery = true)
     List<AccommodationEntity> getAllAvailableAccommodations();
+
+    @Query(value = "SELECT COUNT(*) AS count\n" +
+            "FROM accommodation;",
+            nativeQuery = true)
+    int getAllAccommodationsCount();
+
+    @Query(value = "SELECT COUNT(*) AS count\n" +
+            "FROM user_accommodation WHERE status=\"Active\";",
+            nativeQuery = true)
+    int getAllActiveAccommodationsCount();
 }
