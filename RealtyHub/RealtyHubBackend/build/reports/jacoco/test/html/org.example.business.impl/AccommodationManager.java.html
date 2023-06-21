@@ -158,6 +158,12 @@ public class AccommodationManager implements IAccommodationManager {
 <span class="fc" id="L158">        userAccommodationRepository.updateStatus(id);</span>
 <span class="fc" id="L159">    }</span>
 
+    public int countAccommodations() {
+<span class="nc" id="L162">        return accommodationRepository.getAllAccommodationsCount();</span>
+    }
+    public int countActiveAccommodations() {
+<span class="nc" id="L165">        return accommodationRepository.getAllActiveAccommodationsCount();</span>
+    }
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

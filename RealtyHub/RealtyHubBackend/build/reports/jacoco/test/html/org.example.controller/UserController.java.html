@@ -70,5 +70,13 @@ public class UserController {
 <span class="nc" id="L70">        userManager.updateUser(request);</span>
 <span class="nc" id="L71">        return ResponseEntity.noContent().build();</span>
     }
+
+    @RolesAllowed({&quot;ROLE_ADMIN&quot;})
+    @PutMapping(&quot;deactivate/{id}&quot;)
+    public ResponseEntity&lt;UserInfo&gt; deactivateUser(@PathVariable(&quot;id&quot;) long id) {
+<span class="nc" id="L77">        userManager.deactivateUser(id);</span>
+<span class="nc" id="L78">        return ResponseEntity.noContent().build();</span>
+    }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

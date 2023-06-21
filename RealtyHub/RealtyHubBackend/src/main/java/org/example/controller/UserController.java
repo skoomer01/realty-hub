@@ -70,4 +70,12 @@ public class UserController {
         userManager.updateUser(request);
         return ResponseEntity.noContent().build();
     }
+
+    @RolesAllowed({"ROLE_ADMIN"})
+    @PutMapping("deactivate/{id}")
+    public ResponseEntity<UserInfo> deactivateUser(@PathVariable("id") long id) {
+        userManager.deactivateUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

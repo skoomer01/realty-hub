@@ -12,6 +12,7 @@ import org.example.domain.classes.AccessToken;
 import org.example.domain.classes.UserInfo;
 import org.example.persistance.UserInfoRepository;
 import org.example.persistance.UserRepository;
+import org.example.persistance.UserRoleRepository;
 import org.example.persistance.entity.RoleEnum;
 import org.example.persistance.entity.UserEntity;
 import org.example.persistance.entity.UserInfoEntity;
@@ -33,6 +34,8 @@ public class  UserManager implements IUserManager {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private AccessToken requestAccessToken;
+
+    private UserRoleRepository userRoleRepository;
 
     @Transactional
     @Override
@@ -164,5 +167,19 @@ public class  UserManager implements IUserManager {
         userInfo.setUsername(request.getUsername());
 
         userInfoRepository.save(userInfo);
+    }
+
+    @Transactional
+    public void deactivateUser(Long id)
+    {
+        Optional<UserEntity> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new InvalidUserException("USER_ID_INVALID");
+        }
+        UserEntity user = userOptional.get();
+        if (requestAccessToken.hasRole(RoleEnum.ADMIN.name()))
+        {
+            userRoleRepository.deactivateUser(RoleEnum.INACTIVE.name(), user.getId());
+        }
     }
 }

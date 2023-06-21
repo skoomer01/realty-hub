@@ -70,5 +70,15 @@ public class AccommodationController {
 <span class="nc" id="L70">        accommodationManager.updateAccommodation(request);</span>
 <span class="nc" id="L71">        return ResponseEntity.noContent().build();</span>
     }
+
+    @GetMapping(&quot;/activeCount&quot;)
+    public int getActiveAccommodationsCount() {
+<span class="nc" id="L76">        return accommodationManager.countActiveAccommodations();</span>
+    }
+
+    @GetMapping(&quot;/count&quot;)
+    public int getAccommodationsCount() {
+<span class="nc" id="L81">        return accommodationManager.countAccommodations();</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
